@@ -12,21 +12,42 @@
 '''
 
 import json
+from collections import defaultdict
 
 def write_order_to_json(item, quantity, price, buyer, date):
     '''
     Пишет словарь в файл
     '''
-    tmp_dict = {
+    tmp_dict = \
+        { 'orders': {
         'item': item,
         'quantity': quantity,
         'price': price,
         'buyer': buyer,
-        'date': date
+        'date': date}
     }
+    try:
+        with open('orders.json', encoding='utf8') as f_r:
 
-    with open('orders_tmp.json', 'w', encoding='utf8') as f_w:
-        f_w.write(json.dumps(tmp_dict, ensure_ascii=False, indent=4))
+            orders_data = json.load(f_r)
+            orders_data["orders"].append(tmp_dict['orders'])
+
+    except FileNotFoundError:
+        print("File not found. File creted.")
+        with open('orders.json', 'w', encoding='utf8') as f_w:
+            f_w.write(json.dumps(tmp_dict, ensure_ascii=False, indent=4))
+        return
+
+    with open('orders.json', 'w', encoding='utf8') as f_w:
+        f_w.write(json.dumps(orders_data, ensure_ascii=False, indent=4))
+        return
+    #
+
+    # orders.append(new_order)
+    # dict_json = {'orders': orders}
+    #
+    # with open('Orders.JSON', 'w') as f:
+    #     f.write(json.dumps(dict_json, indent=4))
 
 TEST_DATA = {
         'item': 'Подстаканник',
@@ -45,5 +66,5 @@ write_order_to_json(TEST_DATA.pop('item'),
                     TEST_DATA.pop('buyer'),
                     TEST_DATA.pop('date'))
 
-with open('orders_tmp.json') as f_n:
+with open('orders.json') as f_n:
     print(f_n.read())
