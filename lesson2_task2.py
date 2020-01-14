@@ -12,42 +12,44 @@
 '''
 
 import json
-from collections import defaultdict
 
 def write_order_to_json(item, quantity, price, buyer, date):
     '''
-    Пишет словарь в файл
+    Дописывает словарь в файл. Если файла нет - создаёт его.
     '''
     tmp_dict = \
-        { 'orders': {
+        {
         'item': item,
         'quantity': quantity,
         'price': price,
         'buyer': buyer,
-        'date': date}
-    }
+        'date': date
+        }
+
     try:
         with open('orders.json', encoding='utf8') as f_r:
-
             orders_data = json.load(f_r)
-            orders_data["orders"].append(tmp_dict['orders'])
+            orders_data['orders'].append(tmp_dict)
 
     except FileNotFoundError:
         print("File not found. File creted.")
+        tmp_new_dict = \
+            {'orders': [{
+                'item': item,
+                'quantity': quantity,
+                'price': price,
+                'buyer': buyer,
+                'date': date }]
+            }
         with open('orders.json', 'w', encoding='utf8') as f_w:
-            f_w.write(json.dumps(tmp_dict, ensure_ascii=False, indent=4))
+            f_w.write(json.dumps(tmp_new_dict, ensure_ascii=False, indent=4))
+
+
         return
 
     with open('orders.json', 'w', encoding='utf8') as f_w:
         f_w.write(json.dumps(orders_data, ensure_ascii=False, indent=4))
         return
-    #
-
-    # orders.append(new_order)
-    # dict_json = {'orders': orders}
-    #
-    # with open('Orders.JSON', 'w') as f:
-    #     f.write(json.dumps(dict_json, indent=4))
 
 TEST_DATA = {
         'item': 'Подстаканник',
@@ -56,9 +58,6 @@ TEST_DATA = {
         'buyer': 'Петров',
         'date': '1.02.2020'
     }
-
-# print(type(TEST_DATA), TEST_DATA)
-# print(TEST_DATA.get('item'))
 
 write_order_to_json(TEST_DATA.pop('item'),
                     TEST_DATA.pop('quantity'),
