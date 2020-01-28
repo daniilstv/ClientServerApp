@@ -1,9 +1,9 @@
 '''
-Global app settings
+Глобальные общие переменны
 '''
 
 DEF_ADDR = '127.0.0.1'
-DEF_PORT = 1888
+DEF_PORT = 1878
 ENCODING = 'UTF-8'
 MAX_MSG_LENGHT = 1000
 MAX_CONNECTIONS = 5
