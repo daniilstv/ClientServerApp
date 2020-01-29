@@ -9,12 +9,18 @@ def get_json_from_socket(client):
     '''
     Байты из сокета преобразуем в json
     '''
+    #return json.loads(client.recv(MAX_MSG_LENGHT).decode(ENCODING))
     reciv_from_client = client.recv(MAX_MSG_LENGHT)
-    decode_msg = reciv_from_client.decode(ENCODING)
-    data = json.loads(decode_msg)
-    # data = json.loads(client.recv(MAX_MSG_LENGHT).decode(ENCODING))
-    # in_msg = data["user"]
-    return data
+    if isinstance(reciv_from_client, bytes):
+        decode_msg = reciv_from_client.decode(ENCODING)
+        data = json.loads(decode_msg)
+        if isinstance(data, dict):
+        # data = json.loads(client.recv(MAX_MSG_LENGHT).decode(ENCODING))
+        # in_msg = data["user"]
+            return data
+        raise ValueError
+    raise ValueError
+
 
 def get_command_line(DEF_ADDR, DEF_PORT):
     '''
@@ -34,19 +40,3 @@ def get_command_line(DEF_ADDR, DEF_PORT):
         print(f"Подключение по умолчанию к {ADDR, PORT}")
     return ADDR, PORT
 
-def get_message(client):
-    '''
-    Утилита приёма и декодирования сообщения
-    принимает байты выдаёт словарь, если приняточто-то другое отдаёт ошибку значения
-    :param client:
-    :return:
-    '''
-
-    encoded_response = client.recv(MAX_PACKAGE_LENGTH)
-    if isinstance(encoded_response, bytes):
-        json_response = encoded_response.decode(ENCODING)
-        response = json.loads(json_response)
-        if isinstance(response, dict):
-            return response
-        raise ValueError
-    raise ValueError

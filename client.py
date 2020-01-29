@@ -9,20 +9,22 @@ from common.def_lib import get_command_line, get_json_from_socket
 
 ADDR, PORT = get_command_line(DEF_ADDR, DEF_PORT)
 
+# Структура сообщения
 presence = {
         ACTION: "presence",
         TIME: time.time(),
         USER: {ACCOUNT_NAME:  "user", "TEXT": "Yep, I am here!"}}
 
+# соединение и отправка сообщения
 sock = socket(AF_INET, SOCK_STREAM)  # Создать сокет TCP
 sock.connect((ADDR, PORT))   # Соединиться с сервером
 
 msg = json.dumps(presence)
+encoded_message = msg.encode(ENCODING)
+sock.send(encoded_message)
 
-
-sock.send(msg.encode(ENCODING))
 try:
-    # data = json.loads(sock.recv(MAX_MSG_LENGHT).decode(ENCODING))
+    #data = json.loads(sock.recv(1000).decode(ENCODING))
     data = get_json_from_socket(sock)
     print(data)
     sock.close()

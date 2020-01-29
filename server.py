@@ -4,7 +4,7 @@
 import json
 from socket import  AF_INET, SOCK_STREAM, socket
 from common.settings import DEF_ADDR, DEF_PORT, ENCODING, \
-    RESPONSE, ERROR, PRESENCE, ACTION, TIME, USER, ACCOUNT_NAME
+    RESPONSE, ERROR, PRESENCE, ACTION, TIME, USER, ACCOUNT_NAME, MAX_MSG_LENGHT
 from common.def_lib import get_command_line, get_json_from_socket
 
 def check_inbound_msg(data):
@@ -28,8 +28,7 @@ while True:
     client, addr = sock.accept()     # Принять запрос на соединение
     print("Получен запрос на соединение от %s" % str(addr))
     try:
-        # data = json.loads(client.recv(MAX_MSG_LENGHT).decode(ENCODING))
-        get_data = get_json_from_socket(sock)
+        get_data = get_json_from_socket(client) # ошибка была в неправильной переменной, передаваемой в функцию
         inbound_status = check_inbound_msg(get_data)
         print(inbound_status)
 
