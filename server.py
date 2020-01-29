@@ -4,7 +4,7 @@
 import json
 from socket import  AF_INET, SOCK_STREAM, socket
 from common.settings import DEF_ADDR, DEF_PORT, ENCODING, \
-    RESPONSE, ERROR, PRESENCE, ACTION, TIME, USER, ACCOUNT_NAME, MAX_MSG_LENGHT
+    RESPONSE, ERROR, PRESENCE, ACTION, TIME, USER, ACCOUNT_NAME
 from common.def_lib import get_command_line, get_json_from_socket
 
 def check_inbound_msg(data):
