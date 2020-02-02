@@ -1,5 +1,5 @@
 '''
-Глобальные общие переменны
+Глобальные общие переменные
 '''
 
 DEF_ADDR = '127.0.0.1'
@@ -14,10 +14,11 @@ ACTION = 'action'
 TIME = 'time'
 USER = 'user'
 ACCOUNT_NAME = 'account_name'
+MESSAGE = 'msg_from_user'
 
 
 # Ключи сообщений протокола
 PRESENCE = 'presence'
 RESPONSE = 'response'
 ERROR = 'error'
-RESPONDEFAULT_IP_ADDRESSSE = 'respondefault_ip_addressse'
+RESPONDEFAULT_IP_ADDRESS = 'respondefault_ip_addressse'
