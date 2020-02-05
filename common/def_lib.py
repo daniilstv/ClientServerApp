@@ -13,7 +13,7 @@ def get_json_from_socket(client):
     '''
     Байты из сокета преобразуем в json
     '''
-    #print(client, type(client))
+    # print(client, type(client))
     reciv_from_client = client.recv(MAX_MSG_LENGHT)
     CLIENT_LOGGER.debug(f"Получено сообщение")
     if isinstance(reciv_from_client, bytes):

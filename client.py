@@ -8,12 +8,14 @@ from socket import  AF_INET, SOCK_STREAM, socket
 import logs.config_client_log
 from common.settings import DEF_ADDR, DEF_PORT, ACTION, TIME, USER, ACCOUNT_NAME, ENCODING, MESSAGE
 from common.def_lib import get_command_line, get_json_from_socket
+from decorators import log
 
 CLIENT_LOGGER = logging.getLogger('client.py')
 
-USER = 'guest'
-MESSAGE = "Yep, I am here!"
+USERNAME = 'guest'
+USERMESSAGE = "Yep, I am here!"
 
+@log
 def client_main(user, message):
     '''
     Пользователь соединяется и отправляет сообщение
@@ -38,7 +40,6 @@ def client_main(user, message):
         CLIENT_LOGGER.error(f"Не удаётся соединиться с сервером {addr, port}")
         #return print("Не удаётся соединиться с сервером")
 
-
     msg = json.dumps(presence)
     encoded_message = msg.encode(ENCODING)
     sock.send(encoded_message)
@@ -46,8 +47,9 @@ def client_main(user, message):
     CLIENT_LOGGER.debug(f"Сообщение отправлено")
 
     try:
+        #data = sock.recv(MAX_MSG_LENGHT)
         data = get_json_from_socket(sock)
-        print(data)
+        # print(data)
         CLIENT_LOGGER.debug(f"Ответ сервера: {data}")
         sock.close()
         return data
@@ -57,4 +59,4 @@ def client_main(user, message):
         sock.close()
 
 if __name__ == '__main__':
-    client_main(USER, MESSAGE)
+    client_main(USERNAME, USERMESSAGE)

@@ -15,20 +15,23 @@ from common.settings import RESPONSE, ERROR, USER, ACCOUNT_NAME, TIME, ACTION, \
 from common.def_lib import get_json_from_socket, get_command_line
 
 
-def socket_emulator(test_dict):
+def socket1_emulator():
     '''Эмулятор сокета'''
-    msg = json.dumps(test_dict)
-    encoded_message = msg.encode(ENCODING)
-
     sock1 = socket(AF_INET, SOCK_STREAM)
     sock1.bind(('127.0.0.1', 1776))
     sock1.listen(5)
+    print(6)
+    client, addr = sock1.accept()
+    print(7)
+    return client
 
+def socket2_emulator(test_dict):
+    msg = json.dumps(test_dict)
+    encoded_message = msg.encode(ENCODING)
     sock2 = socket(AF_INET, SOCK_STREAM)
     sock2.connect(('127.0.0.1', 1776))
     sock2.send(encoded_message)
 
-    return sock1
 
 DICT_FOR_TEST = {
         ACTION: "presence",
@@ -42,17 +45,18 @@ class TestServer(unittest.TestCase):
         неверная структура
     '''
 
-    # def test_get_json_from_socket(self):
-    #     '''
-    #     Проверка функции get_json_from_socket()
-    #     '''
-    #     fake_socket = socket_emulator(DICT_FOR_TEST)
-    #     msg_from_function = get_json_from_socket(fake_socket)
-    #     print(3)
-    #     self.assertEqual(type(msg_from_function), type(DICT_FOR_TEST), \
-    #     "Неверный тип данных от сокета")
-    #     self.assertEqual(msg_from_function, DICT_FOR_TEST, "Неверная расшифровка сокета")
-    #     print(4)
+    def test_get_json_from_socket(self):
+        '''
+        Проверка функции get_json_from_socket()
+        '''
+        fake_socket = socket1_emulator()
+        socket2_emulator(DICT_FOR_TEST)
+        msg_from_function = get_json_from_socket(fake_socket)
+        print(3)
+        self.assertEqual(type(msg_from_function), type(DICT_FOR_TEST), \
+        "Неверный тип данных от сокета")
+        self.assertEqual(msg_from_function, DICT_FOR_TEST, "Неверная расшифровка сокета")
+        print(4)
 
 
 
@@ -73,7 +77,7 @@ class TestServer(unittest.TestCase):
         """
         # Попытался эмулировать ввод в консоль
         # print(2)
-        addres, port = '1.1.1.2', 4321
+        # addres, port = '1.1.1.2', 4321
         # get_command_line(addres, port)
         # print(3)
         # command = "client.py '1.1.1.2' 4321"
@@ -81,11 +85,11 @@ class TestServer(unittest.TestCase):
         # subprocess.check_call(command)
         # sys.stdin.read()
         # print(4)
-        #print(('1.1.1.2', 4321))
+        # print(('1.1.1.2', 4321))
         # print(5)
-        test = get_command_line(addres, port)
-        self.assertEqual(test, ('1.1.1.2', 4321), "Ошибка получения адреса и порта из консоли")
-
+        # test = get_command_line(addres, port)
+        # self.assertEqual(test, ('1.1.1.2', 4321), "Ошибка получения адреса и порта из консоли")
+        #
 
     # def testsimplestring(self):
     #     r = splitter.split('GOOG 100 490.50')

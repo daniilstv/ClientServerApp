@@ -8,9 +8,11 @@ import logs.config_server_log
 from common.settings import DEF_ADDR, DEF_PORT, ENCODING, \
     RESPONSE, ERROR, PRESENCE, ACTION, TIME, USER, ACCOUNT_NAME, RESPONDEFAULT_IP_ADDRESS, MESSAGE
 from common.def_lib import get_command_line, get_json_from_socket
+from decorators import log
 
 SRV_LOGGER = logging.getLogger('server.py')
 
+@log
 def check_inbound_msg(data):
     '''
     Проверка корректности входящего сообщения
@@ -21,12 +23,18 @@ def check_inbound_msg(data):
             and USER in data and data[USER][ACCOUNT_NAME] == "guest":
         SRV_LOGGER.debug(f"Входящее сообщение от {ACCOUNT_NAME} корректно")
         return {RESPONSE: 200}
-    return SRV_LOGGER.error(f"Неверный формат сообщения от {ACCOUNT_NAME}"), {
+#     username = 'No USER'
+#     print(data)
+#     if data[USER][ACCOUNT_NAME] is False:
+#     username = data[USER][ACCOUNT_NAME]
+#     print(username)
+    SRV_LOGGER.error(f"Неверный формат сообщения")
+    return  {
         RESPONDEFAULT_IP_ADDRESS: 400,
         ERROR: 'Bad Request'
     }
 
-
+@log
 def main():
     '''
     Поднять сокет, получить сообщение, отправить статус
@@ -40,11 +48,13 @@ def main():
     # Добавить функцию: если порт занят - перебор в диапазоне
     sock.listen(5)
     SRV_LOGGER.debug(f"Открыт сокет {addr, port}")
+
     while True:
         client, addr = sock.accept()     # Принять запрос на соединение
-        #print("Получен запрос на соединение от %s" % str(addr))
+        print("Получен запрос на соединение от %s" % str(addr))
         SRV_LOGGER.debug(f"Получен запрос на соединение от {str(addr)}")
         try:
+#            data = sock.recv(MAX_MSG_LENGHT)
             get_data = get_json_from_socket(client) # Нашел ошибку
             # ошибка была в неправильной переменной, передаваемой в функцию
             inbound_status = check_inbound_msg(get_data)

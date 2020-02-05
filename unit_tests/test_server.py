@@ -22,17 +22,17 @@ class TestServer(TestCase):
         pass
 
     # Возможные выводы функции
-    err_dict = (None, {
+    err_dict = {
         RESPONDEFAULT_IP_ADDRESS: 400,
         ERROR: 'Bad Request'
-    })
+    }
     ok_dict = {RESPONSE: 200}
 
     def test_no_action(self):
         """Ошибка если нет действия"""
         no_action = {
             TIME: time.time(),
-            USER: {ACCOUNT_NAME: "user", "TEXT": "Yep, I am here!"}}
+            USER: {ACCOUNT_NAME: "user", MESSAGE: "Yep, I am here!"}}
 
         self.assertEqual(check_inbound_msg(no_action), self.err_dict)
 
@@ -40,7 +40,7 @@ class TestServer(TestCase):
         """Ошибка если нет времени"""
         no_time = {
             ACTION: "presence",
-            USER: {ACCOUNT_NAME: "user", "TEXT": "Yep, I am here!"}}
+            USER: {ACCOUNT_NAME: "user", MESSAGE: "Yep, I am here!"}}
 
         self.assertEqual(check_inbound_msg(no_time), self.err_dict)
 
@@ -58,7 +58,7 @@ class TestServer(TestCase):
         unknown_user = {
             ACTION: "presence",
             TIME: time.time(),
-            USER: {ACCOUNT_NAME: "xxx", "TEXT": "Yep, I am here!"}}
+            USER: {ACCOUNT_NAME: "xxx", MESSAGE: "Yep, I am here!"}}
 
         self.assertEqual(check_inbound_msg(unknown_user), self.err_dict)
 

@@ -11,6 +11,8 @@ from server import  main as server_main
 from common.settings import RESPONSE, ERROR, ACTION, TIME, USER, \
     ACCOUNT_NAME, RESPONDEFAULT_IP_ADDRESS, MESSAGE
 
+#server_main()  # запуск сервера
+
 class TestClass(unittest.TestCase):
     '''
     Проверка функции main клиента
@@ -18,7 +20,7 @@ class TestClass(unittest.TestCase):
 
     def setUp(self):
         # Выполнить настройку тестов (если необходимо)
-        #server_main() #запуск сервера
+        #server_main()  # запуск сервера
         pass
 
     def tearDown(self):
@@ -45,17 +47,15 @@ class TestClass(unittest.TestCase):
         user, message = 'guest', "Yep, I am here!"
         test = client_main(user, message)
         print("1")
-        self.assertEqual(test, {'response': 200}, "Некорректный ответ")
+        self.assertEqual(test, {'response': 200}, "Корректный ответ")
 
-    def test_response400(self):
-        """Тест не коректного запроса"""
-        user, message = '_', "Yep, I am here!"
-        test = client_main(user, message)
-
-
-        print("2")
-        self.assertEqual(test, {'respondefault_ip_addressse': 400, 'error': 'Bad Request'}, \
-                         "Некорректный ответ")
+    # def test_response400(self):
+    #     """Тест не коректного запроса"""
+    #     user, message = ,
+    #     test = client_main(user, message)
+    #     print("2")
+    #     self.assertEqual(test, {'respondefault_ip_addressse': 400, 'error': 'Bad Request'}, \
+    #                      "Некорректный ответ")
 
 
 if __name__ == '__main__':
