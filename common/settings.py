@@ -15,6 +15,8 @@ TIME = 'time'
 USER = 'user'
 ACCOUNT_NAME = 'account_name'
 MESSAGE = 'msg_from_user'
+CONNECTION_LIMIT = 10
+#MESSAGE_TEXT = 'msg_txt'
 
 
 # Ключи сообщений протокола
