@@ -16,7 +16,7 @@ CLIENT_LOGGER = logging.getLogger('client.py')
 
 USERNAME = 'guest'
 USERMESSAGE = "ping"
-TEXT = 'сообщение через сервер другим клиентам'
+TEXT = 'Это сообщение через сервер другим клиентам'
 
 @log
 def text_dict(sock, account_name=USERNAME, text=TEXT):
@@ -60,11 +60,11 @@ def client_main(user, message):
         ACTION: "presence",
         TIME: time.time(),
         USER: {ACCOUNT_NAME: user, MESSAGE: message}}
-    print("!!!presence json",presence)
+    # print("!!!presence json",presence)
     # соединение и отправка сообщения
     sock = socket(AF_INET, SOCK_STREAM)     # Создать сокет TCP
     try:                                   # Соединиться с сервером
-        print("addr, port",addr, port)
+        # print("addr, port",addr, port)
         sock.connect((addr, port))
         CLIENT_LOGGER.debug(f"Соединился с сервером {addr, port}")
     except (ConnectionRefusedError):
@@ -103,7 +103,7 @@ def client_main(user, message):
 
     if mode == 'sender':
         CLIENT_LOGGER.info(f"Режим работы - отправка сообщений.")
-        print('Режим работы - отправка сообщений.')
+        # print('Режим работы - отправка сообщений.')
         try:
             txt = text_dict(sock, USERNAME, TEXT)
             js_text = json.dumps(txt)
@@ -116,18 +116,18 @@ def client_main(user, message):
             sys.exit(1)
 
     else:
-        print('Режим работы - приём сообщений.')
+        # print('Режим работы - приём сообщений.')
         CLIENT_LOGGER.info(f"Режим работы - приём сообщений.")
        # mode = 'receiver':
         try:
             # print("жду сообщения..")
             data = json.loads(sock.recv(MAX_MSG_LENGHT).decode(ENCODING))
             # data = get_json_from_socket(sock)
-            print("_получил:", data)
+            # print("_получил:", data)
             data = json.loads(sock.recv(MAX_MSG_LENGHT).decode(ENCODING))
             # data = get_json_from_socket(sock)
             # print("получил:", data)
-            print("принял текст: =", data[USER][MESSAGE], "= от ", data[USER][ACCOUNT_NAME])
+            print("Клиент принял от ", data[USER][ACCOUNT_NAME], "текст:", data[USER][MESSAGE])
             sock.close()
         except (ConnectionResetError, ConnectionError, ConnectionAbortedError):
             CLIENT_LOGGER.error(f'Соединение с сервером {addr} было потеряно.')

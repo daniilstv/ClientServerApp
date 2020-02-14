@@ -20,9 +20,9 @@ SRV_LOGGER = logging.getLogger('server.py')
 def send_message(client, data):
     dump = json.dumps(data)
     dump_encode = dump.encode(ENCODING)
-    print("dump_encode", dump_encode)
+    #print("dump_encode", dump_encode)
     client.send(dump_encode)
-    print("сообщение клиенту отправлено")
+    #print("сообщение клиенту отправлено")
 
 @log
 def check_inbound_msg(data, messages_list, client):
@@ -42,7 +42,7 @@ def check_inbound_msg(data, messages_list, client):
             TIME in data and USER in data:
         # print("!!добавлено в словарь:",data[USER][ACCOUNT_NAME], data[USER][MESSAGE])
         messages.append((data[USER][ACCOUNT_NAME], data[USER][MESSAGE]))
-        print("Добавлено сообщение. Сейчас:", messages)
+        #print("Добавлено сообщение. Сейчас:", messages)
         SRV_LOGGER.debug(f"Входящее сообщение от {data[USER][ACCOUNT_NAME]} с текстом")
         return data[USER][ACCOUNT_NAME], data[USER][MESSAGE]
 
@@ -85,13 +85,13 @@ def main():
     while True:
         try:
             client, addr = sock.accept()     # Принять запрос на соединение
-            print(f"Принят запрос на соединение: {client, addr}")
+            # print(f"Принят запрос на соединение: {client, addr}")
         except OSError:
             print("ошибка в запросе соединения")
             pass
         else:
             SRV_LOGGER.debug(f'Установлено соедение с {addr}')
-            print(f"Установлено соединение с: {client}")
+            # print(f"Установлено соединение с: {client}")
             clients.append(client)
 
 
@@ -99,7 +99,7 @@ def main():
         try:
             get_data = get_json_from_socket(client)
             inbound_status = check_inbound_msg(get_data, messages, client)
-            print(inbound_status)
+            # print(inbound_status)
             SRV_LOGGER.debug(f"Формат входящего сообщения корректен: {inbound_status}")
 
             dump_status = json.dumps(inbound_status)
@@ -127,11 +127,11 @@ def main():
             if clients:
                 recv_data_lst, send_data_lst, err_lst = select.select(clients, clients, [], 0)
                 # send_data_lst, recv_data_lst, err_lst = select.select(clients, clients, [], 0)
-                print("добавлены подключения", recv_data_lst, send_data_lst, err_lst)
+                # print("добавлены подключения", recv_data_lst, send_data_lst, err_lst)
         except OSError:
             pass
 
-        print("клиентов в списке:", len(clients))
+        #print("клиентов в списке на сервере:", len(clients))
 
 
         # принимаем сообщения и если там есть сообщения,
@@ -145,27 +145,27 @@ def main():
                 #print(data.recv(MAX_MSG_LENGHT))
 
                     data = data.recv(MAX_MSG_LENGHT)
-                    print(data)
+                    # print(data)
                     data = data.decode(ENCODING) #?????!!!
-                    print("раскодировали сообщение",data)
+                    # print("раскодировали сообщение",data)
                     data = json.loads(data)
-                    print("json.loads:",data)
+                    # print("json.loads:",data)
                     # get_data = get_json_from_socket(client)
                     usermame, msg_text = data[USER][ACCOUNT_NAME], data[USER][MESSAGE]
-                    print(f'сообщение..:{usermame, msg_text}')
+                    # print(f'сообщение..:{usermame, msg_text}')
                     messages.append((usermame, msg_text))
-                    print(f'сообщения в очереди на отправку:{messages}')
+                    # print(f'сообщения в очереди на отправку:{messages}')
                 except:
                     SRV_LOGGER.info(f'Клиент {i} отключился от сервера.')
                     # SRV_LOGGER.info(f'Клиент {i.getpeername()} отключился от сервера.')
-                    print(f'Клиент {i} отключился от сервера.')
+                    # print(f'Клиент {i} отключился от сервера.')
                     try:
                         clients.remove(i)
                     except:
                         pass
 
         # Если есть сообщения для отправки и ожидающие клиенты, отправляем им сообщение.
-        n = 0
+        #n = 0
         if messages:
            # for a in range(2):
           #  print("messages, send_data_lst", messages, send_data_lst)
@@ -173,19 +173,19 @@ def main():
                 ACTION: MESSAGE,
                 TIME: time.time(),
                 USER: {ACCOUNT_NAME: messages[0][0], MESSAGE: messages[0][1]}}
-            print("1сообщения для возврата клиентам:", messages)
-            # del messages[0]
-            print("2сообщения для возврата клиентам:", messages)
+            #print("1сообщения для возврата клиентам:", type(messages), messages )
+            #del messages[0]
+            #print("2сообщения для возврата клиентам:", messages)
             for i in send_data_lst:
            # for i in range(2):
                 try:
-                    n+=1
+                    #n+=1
                     # print(n, "отправляю:", i, message)
                     send_message(i, message)
                 except:
                     SRV_LOGGER.info(f'Клиент {i} отключился от сервера.')
                     # SRV_LOGGER.info(f'Клиент {i.getpeername()} отключился от сервера.')
-                   # clients.remove(i)
+                    # clients.remove(i)
 
 
 
